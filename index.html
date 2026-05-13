@@ -427,7 +427,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     var valid = true;
     if (!name)  { shake('firstName'); valid = false; }
-    if (!/^\+?[\d\s\-().]{7,}$/.test(phone)) { shake('phone'); valid = false; }
+    var phoneDigits = phone.replace(/[^0-9]/g, ''); if (phoneDigits.length !== 10 && !(phoneDigits.length === 11 && phoneDigits[0] === '1')) { shake('phone'); valid = false; }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { shake('email'); valid = false; }
     if (!revenue) {
       document.querySelector('.radio-group').style.outline = '2px solid #EF4444';
