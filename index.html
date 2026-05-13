@@ -354,10 +354,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <input type="tel" id="phone" placeholder="555-222-2222" autocomplete="tel"/>
     </div>
     <div class="form-group">
-      <label>Email Address</label>
-      <input type="email" id="email" placeholder="you@example.com" autocomplete="email"/>
-    </div>
-    <div class="form-group">
       <label>What's your current monthly revenue?</label>
       <div class="radio-group">
         <label class="radio-option"><input type="radio" name="revenue" value="$0 - $10,000"/> <span>$0 – $10,000</span></label>
@@ -421,14 +417,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   function submitForm() {
     var name = document.getElementById('firstName').value.trim();
     var phone = document.getElementById('phone').value.trim();
-    var email = document.getElementById('email').value.trim();
     var revenueEl = document.querySelector('input[name="revenue"]:checked');
     var revenue = revenueEl ? revenueEl.value : '';
 
     var valid = true;
     if (!name)  { shake('firstName'); valid = false; }
     var phoneDigits = phone.replace(/[^0-9]/g, ''); if (phoneDigits.length !== 10 && !(phoneDigits.length === 11 && phoneDigits[0] === '1')) { shake('phone'); valid = false; }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { shake('email'); valid = false; }
     if (!revenue) {
       document.querySelector('.radio-group').style.outline = '2px solid #EF4444';
       document.querySelector('.radio-group').style.borderRadius = '8px';
@@ -445,7 +439,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     fetch('https://services.leadconnectorhq.com/hooks/AP4y7ksWcUvVV6XCz7VN/webhook-trigger/f46abed8-3569-4035-a17c-61e1f03739ff', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: name, phone: '+1' + String(phone).replace(/[^0-9]/g, '').replace(/^1/, ''), email: email, revenue: revenue, source: 'rv-solar-gate' })
+      body: JSON.stringify({ name: name, phone: '+1' + String(phone).replace(/[^0-9]/g, '').replace(/^1/, ''), revenue: revenue, source: 'rv-solar-gate' })
     })
     .then(function(res) {
       console.log('GHL webhook response:', res.status);
