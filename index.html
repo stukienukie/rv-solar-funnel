@@ -212,6 +212,14 @@ src="https://www.facebook.com/tr?id=1514677843570094&ev=PageView&noscript=1"/></
   .radio-option input[type="radio"] { accent-color: var(--blue); width: 16px; height: 16px; flex-shrink: 0; cursor: pointer; }
   .radio-option span { font-size: 0.9rem; color: var(--ink); font-weight: 500; }
   .radio-option:has(input:checked) { border-color: var(--blue); background: rgba(51,172,225,0.1); }
+  /* Yes/No toggle for the "looking to grow" question */
+  .grow-group label { text-transform: none; letter-spacing: 0; font-size: 0.96rem; font-weight: 600; color: var(--ink); margin-bottom: 0.6rem; }
+  .grow-group .radio-group { gap: 10px; }
+  .grow-group .radio-option { justify-content: center; gap: 0; padding: 0.92rem 1rem; position: relative; }
+  .grow-group .radio-option input[type="radio"] { opacity: 0; width: 0; height: 0; margin: 0; }
+  .grow-group .radio-option span { font-family: 'Poppins', sans-serif; font-size: 1rem; font-weight: 600; color: var(--ink); }
+  .grow-group .radio-option:has(input:checked) span { color: var(--blue-dark); }
+  .grow-group .radio-option:has(input:focus-visible) { outline: 3px solid rgba(51,172,225,0.55); outline-offset: 2px; }
   .submit-btn { width: 100%; background: var(--blue); color: #fff; border: none; border-radius: 12px; padding: 1rem; font-family: 'Poppins', sans-serif; font-size: 1.05rem; font-weight: 700; letter-spacing: -0.01em; cursor: pointer; margin-top: 0.5rem; transition: background 0.2s, transform 0.15s; display: flex; align-items: center; justify-content: center; gap: 8px; }
   .submit-btn:hover:not(:disabled) { background: var(--blue-dark); }
   .submit-btn:active { transform: scale(0.98); }
@@ -436,7 +444,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <input type="tel" id="fPhone" name="phone" autocomplete="tel" inputmode="tel" placeholder="(555) 123-4567">
       <div class="field-error" id="err-phone">Please enter a valid 10-digit phone number.</div>
     </div>
-    <div class="form-group">
+    <div class="form-group grow-group">
       <label>Are you looking to grow your business?</label>
       <div class="radio-group" id="growGroup">
         <label class="radio-option"><input type="radio" name="grow" value="Yes"><span>Yes</span></label>
