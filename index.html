@@ -13,20 +13,14 @@
   ============================================================================
   Single-page funnel. Submitting the form unlocks the how-it-works Loom inline
   and reveals the booking calendar on THIS page — no redirect.
-  One placeholder left: {{GHL_BOOKING_WIDGET_URL}} (CONFIG.BOOKING_URL below).
-  The GHL Inbound Webhook is already set in CONFIG.WEBHOOK_URL.
+  Fully configured — no placeholders remain (webhook + booking widget set in
+  CONFIG below). Only the RV Solar Meta Pixel (1514677843570094) loads; GTM removed.
   Lead/conversion fires ONLY after the webhook confirms the CRM received the
   contact (see submit logic at the bottom).
   ============================================================================
 -->
 
-<!-- Google Tag Manager. Meta Pixel is hardcoded below — do NOT re-install it in GTM. -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-NKKF36BW');</script>
-<!-- End Google Tag Manager -->
+<!-- GTM intentionally removed — only the RV Solar Meta Pixel (below) should load. -->
 
 <!-- ===== Meta Pixel ============================================================
      PageView on load; ViewContent when the form opens (retargeting, NOT a
@@ -95,10 +89,9 @@ src="https://www.facebook.com/tr?id=1514677843570094&ev=PageView&noscript=1"/></
     background: radial-gradient(120% 130% at 50% 0%, var(--navy-2) 0%, var(--navy) 62%);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
-  .locked-card::after { content: ''; position: absolute; width: 60%; height: 60%; left: 20%; top: 8%;
-    background: radial-gradient(ellipse at center, rgba(51,172,225,0.28), transparent 70%); filter: blur(30px); z-index: 0; }
   .locked-card:hover { transform: translateY(-3px); }
-  .locked-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(15,34,51,0.10), rgba(15,34,51,0.55)); z-index: 1; }
+  .locked-thumb { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: blur(14px) brightness(0.82) saturate(1.05); transform: scale(1.14); z-index: 0; }
+  .locked-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(15,34,51,0.28), rgba(15,34,51,0.64)); z-index: 1; }
   .lock-pill { position: absolute; top: 14px; left: 50%; transform: translateX(-50%); z-index: 3;
     background: rgba(15,34,51,0.55); backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,0.18);
     color: #fff; font-size: 0.76rem; font-weight: 600; letter-spacing: 0.02em; padding: 6px 15px; border-radius: 100px; white-space: nowrap; }
@@ -257,10 +250,6 @@ src="https://www.facebook.com/tr?id=1514677843570094&ev=PageView&noscript=1"/></
 </style>
 </head>
 <body>
-<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NKKF36BW"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
 
 <header class="strip">
   <img class="logo-img" src="/logo.png" alt="Monox AI">
@@ -281,6 +270,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <section class="locked">
     <div class="video-shell">
       <div class="locked-card" id="lockedCard" role="button" tabindex="0" aria-label="Unlock the how-it-works video">
+        <img class="locked-thumb" src="/howitworks-thumb.jpg" alt="" aria-hidden="true">
         <div class="locked-overlay"></div>
         <div class="lock-pill">🔒 Video locked — unlock below</div>
         <div class="play-btn">
@@ -309,7 +299,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <p>Grab a time below — we'll walk through what it'd look like for your shop. No pressure, no obligation.</p>
     </div>
     <div class="booking-frame">
-      <iframe id="bookingWidget" scrolling="no" title="Book a call"></iframe>
+      <iframe id="dYzDPeBhtkUBJQTc5kGW_booking" scrolling="no" title="Book a call"></iframe>
     </div>
   </div>
 </section>
@@ -462,7 +452,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   // ── CONFIG ──────────────────────────────────────────────────────────────
   var CONFIG = {
     WEBHOOK_URL: "https://services.leadconnectorhq.com/hooks/AP4y7ksWcUvVV6XCz7VN/webhook-trigger/af47c425-64c0-4ac6-805c-ef9d629642cb", // GHL Inbound Webhook
-    BOOKING_URL: "{{GHL_BOOKING_WIDGET_URL}}", // GHL booking widget URL (revealed inline on unlock)
+    BOOKING_URL: "https://links.monox.ai/widget/booking/dYzDPeBhtkUBJQTc5kGW", // GHL booking widget (revealed inline on unlock)
     HOWITWORKS_EMBED: "https://www.loom.com/embed/610a135314a9404daba73ed4b31e499b?autoplay=1"
   };
 
@@ -533,7 +523,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     var cta = document.getElementById('ctaWrap'); if (cta) cta.style.display = 'none';
     // Reveal booking only if a real widget URL is configured
     if (CONFIG.BOOKING_URL && CONFIG.BOOKING_URL.indexOf('{{') !== 0) {
-      document.getElementById('bookingWidget').src = CONFIG.BOOKING_URL;
+      document.getElementById('dYzDPeBhtkUBJQTc5kGW_booking').src = CONFIG.BOOKING_URL;
       document.getElementById('bookingSection').style.display = 'block';
     }
     document.querySelector('.video-shell').scrollIntoView({ behavior: 'smooth', block: 'center' });

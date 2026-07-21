@@ -22,14 +22,12 @@ is revealed** on the same page. No redirect.
 - **Case-study video** (free): Chris / Tucson RV Solar, Loom `2dd73e63…`.
 - **Logo + favicon** isolated to transparent PNGs. Fonts: Poppins + Inter.
 
-## One placeholder left
+## Fully configured ✅
 
-| Placeholder | Where |
-|---|---|
-| `{{GHL_BOOKING_WIDGET_URL}}` | `index.html` → `CONFIG.BOOKING_URL` |
-
-Until it's set, the booking section stays hidden after unlock (no empty box). Once set,
-it reveals automatically when the form is submitted.
+- **GHL Inbound Webhook** → `CONFIG.WEBHOOK_URL`.
+- **GHL Booking widget** → `CONFIG.BOOKING_URL` (reveals inline on unlock).
+- **Blurred how-it-works teaser** → `howitworks-thumb.jpg` (a real frame of the Loom).
+- **No `{{placeholders}}` remain.**
 
 ---
 
@@ -98,6 +96,7 @@ reminders 24h + 1h before → no-show SMS + rebooking link / showed → post-cal
 
 ## Notes
 
-- Meta Pixel is hardcoded; GTM (`GTM-NKKF36BW`) is loaded but must **not** re-install the
-  pixel (double-fires).
-- Radio buttons (not `<select>`) for "installs per month" — friendlier taps for trades.
+- Only the RV Solar Meta Pixel (`1514677843570094`) loads. GTM was removed from the page
+  to kill a duplicate pixel it was firing — do not re-add it.
+- The "Are you looking to grow your business?" question is a Yes/No toggle; the answer is
+  sent as `looking_to_grow`.
