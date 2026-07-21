@@ -11,12 +11,10 @@
 
 <!--
   ============================================================================
-  PLACEHOLDERS ON THIS PAGE (index.html) — one left to fill before launch:
-  ----------------------------------------------------------------------------
-  {{GHL_INBOUND_WEBHOOK_URL}}  GHL Workflow "Inbound Webhook" trigger URL.
-                               REQUIRED: the Lead/conversion pixel event ONLY
-                               fires after this webhook confirms the contact
-                               was received by the CRM (see submit logic below).
+  This page is fully configured — no placeholders remain.
+  GHL Inbound Webhook is set in CONFIG.WEBHOOK_URL below. The Lead/conversion
+  pixel event fires on /watch ONLY after this webhook confirms the CRM received
+  the contact (see submit logic near the bottom of this file).
   ============================================================================
 -->
 
@@ -443,7 +441,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <script>
   // ── CONFIG ──────────────────────────────────────────────────────────────
   var CONFIG = {
-    WEBHOOK_URL: "{{GHL_INBOUND_WEBHOOK_URL}}", // GHL Workflow → Inbound Webhook trigger URL
+    WEBHOOK_URL: "https://services.leadconnectorhq.com/hooks/AP4y7ksWcUvVV6XCz7VN/webhook-trigger/af47c425-64c0-4ac6-805c-ef9d629642cb", // GHL Inbound Webhook
     WATCH_URL: "/watch"
   };
 

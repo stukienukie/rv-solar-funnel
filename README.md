@@ -23,11 +23,12 @@ watches the how-it-works video and books a call.
 - **Logo + favicon**: isolated to transparent PNGs.
 - Fonts: **Poppins** (headlines) + **Inter** (body).
 
-## Still to fill before going live (2 placeholders)
+## Still to fill before going live (1 placeholder)
+
+- **GHL Inbound Webhook** — ✅ set in `index.html` `CONFIG.WEBHOOK_URL`.
 
 | Placeholder | File | Where |
 |---|---|---|
-| `{{GHL_INBOUND_WEBHOOK_URL}}` | index.html | `CONFIG.WEBHOOK_URL` |
 | `{{GHL_BOOKING_WIDGET_URL}}` | watch/index.html | booking `<iframe src>` |
 
 ---
