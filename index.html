@@ -5,31 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Monox AI — RV Solar Installer System</title>
 <meta name="description" content="How we fill RV solar installers' calendars with ready-to-buy customers — without you lifting a finger.">
-<link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link rel="shortcut icon" href="/favicon.svg">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/favicon.png">
 <meta name="theme-color" content="#0F2233">
 
 <!--
   ============================================================================
-  PLACEHOLDERS ON THIS PAGE (index.html) — replace every {{...}} before launch:
+  PLACEHOLDERS ON THIS PAGE (index.html) — one left to fill before launch:
   ----------------------------------------------------------------------------
-  {{META_PIXEL_ID}}            Meta Pixel ID (numeric)
-  {{GHL_INBOUND_WEBHOOK_URL}}  GHL Workflow "Inbound Webhook" trigger URL
-  {{HOWITWORKS_THUMBNAIL_URL}} Static image behind the LOCKED how-it-works teaser
-                               (blurred). Falls back to a navy gradient if unset.
-  {{CASESTUDY_POSTER_URL}}     Poster image for the free case-study video
-  {{CASESTUDY_MP4_URL}}        MP4 source for the free case-study video
-  {{TIMEFRAME_1}}              DIY Solar Assist timeframe (e.g. "3 months")
-  {{TIMEFRAME_2}}              RVs Off Grid timeframe
-  {{TIMEFRAME_4}}              OffTheGridRV's timeframe
-  {{TIMEFRAME_5}}              Momentum Upfitters timeframe
-  {{CHRIS_COMPANY}}            Chris's company name (review card)
+  {{GHL_INBOUND_WEBHOOK_URL}}  GHL Workflow "Inbound Webhook" trigger URL.
+                               REQUIRED: the Lead/conversion pixel event ONLY
+                               fires after this webhook confirms the contact
+                               was received by the CRM (see submit logic below).
   ============================================================================
 -->
 
-<!-- Google Tag Manager (kept from the existing Monox stack). NOTE: the Meta
-     Pixel below is DELIBERATELY hardcoded on-page for reliability — do NOT
-     also install the pixel inside GTM (GTM-NKKF36BW) or events will double-fire. -->
+<!-- Google Tag Manager. NOTE: the Meta Pixel below is hardcoded on-page for
+     reliability — do NOT also install the pixel in GTM (GTM-NKKF36BW). -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
@@ -38,26 +30,27 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <!-- End Google Tag Manager -->
 
 <!-- ===== Meta Pixel — Page 1 ( / ) ==============================================
-     Fires: PageView on load, ViewContent when the form modal opens (retargeting
-     signal for people who open the form but don't submit).
-     Lead is INTENTIONALLY NOT fired here — it only fires on /watch after a real
-     form submission. Do not add Lead to this page. ============================ -->
+     Fires PageView on load and ViewContent when the form modal opens (a
+     retargeting signal — NOT a conversion).
+     The Lead/conversion event is NEVER fired here. It fires on /watch, and ONLY
+     when the form's contact data was successfully captured + sent to the CRM.
+     ========================================================================= -->
 <script>
 !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
 n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
 n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
 t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
 document,'script','https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '{{META_PIXEL_ID}}');
+fbq('init', '1514677843570094');
 fbq('track', 'PageView');
 </script>
 <noscript><img height="1" width="1" style="display:none"
-src="https://www.facebook.com/tr?id={{META_PIXEL_ID}}&ev=PageView&noscript=1"/></noscript>
+src="https://www.facebook.com/tr?id=1514677843570094&ev=PageView&noscript=1"/></noscript>
 <!-- ===== End Meta Pixel ======================================================= -->
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -73,7 +66,7 @@ src="https://www.facebook.com/tr?id={{META_PIXEL_ID}}&ev=PageView&noscript=1"/><
     --muted: #5B6B78;
     --star: #F5A623;
     --err: #E5484D;
-    --radius: 16px;
+    --radius: 18px;
     --shadow: 0 20px 50px rgba(15,34,51,0.12);
     --shadow-lg: 0 30px 70px rgba(15,34,51,0.20);
   }
@@ -86,19 +79,19 @@ src="https://www.facebook.com/tr?id={{META_PIXEL_ID}}&ev=PageView&noscript=1"/><
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
   }
-  .wrap { max-width: 760px; margin: 0 auto; padding: 0 1.1rem; }
+  .wrap { max-width: 780px; margin: 0 auto; padding: 0 1.1rem; }
 
   /* ── HEADER STRIP ── */
-  header.strip { border-bottom: 1px solid #EDF2F6; padding: 0.85rem 0; text-align: center; }
-  .logo { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 1.35rem; letter-spacing: 0.16em; color: var(--navy); }
+  header.strip { border-bottom: 1px solid #EDF2F6; padding: 0.8rem 0; text-align: center; }
+  .logo-img { height: 30px; width: auto; display: inline-block; vertical-align: middle; }
 
-  /* ── HERO ── */
-  .hero { text-align: center; padding: 2.4rem 0 0.5rem; }
-  .eyebrow { display: inline-block; color: var(--blue); font-weight: 700; font-size: 0.82rem; letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 0.75rem; }
-  h1 { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: clamp(2.1rem, 6.4vw, 3.6rem); line-height: 1.02; letter-spacing: 0.005em; margin-bottom: 1.1rem; }
+  /* ── HERO (wide, home-service headline) ── */
+  .hero { max-width: 1060px; margin: 0 auto; text-align: center; padding: 2.8rem 1.4rem 0.4rem; }
+  .eyebrow { display: inline-block; color: var(--blue); font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 0.85rem; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 0.85rem; }
+  h1 { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: clamp(2.2rem, 5.6vw, 4rem); line-height: 1.07; letter-spacing: -0.022em; margin-bottom: 1.1rem; }
   h1 .hl { color: var(--blue); }
-  .steps { display: flex; flex-direction: column; gap: 0.35rem; max-width: 560px; margin: 0 auto 0.5rem; }
-  .step-line { font-size: 1rem; font-weight: 500; color: var(--muted); }
+  .steps { display: flex; flex-direction: column; gap: 0.35rem; max-width: 620px; margin: 0 auto 0.5rem; }
+  .step-line { font-size: 1.02rem; font-weight: 500; color: var(--muted); }
   .step-line b { color: var(--ink); font-weight: 600; }
 
   /* ── LOCKED "HOW IT WORKS" VIDEO ── */
@@ -107,41 +100,50 @@ src="https://www.facebook.com/tr?id={{META_PIXEL_ID}}&ev=PageView&noscript=1"/><
     position: relative; width: 100%; aspect-ratio: 16/9; border-radius: var(--radius);
     overflow: hidden; cursor: pointer; border: 1px solid rgba(15,34,51,0.10);
     box-shadow: var(--shadow-lg);
-    background: radial-gradient(120% 120% at 50% 0%, var(--navy-2) 0%, var(--navy) 60%);
+    background: radial-gradient(120% 130% at 50% 0%, var(--navy-2) 0%, var(--navy) 62%);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
+  .locked-card::after { content: ''; position: absolute; width: 60%; height: 60%; left: 20%; top: 8%;
+    background: radial-gradient(ellipse at center, rgba(51,172,225,0.28), transparent 70%); filter: blur(30px); z-index: 0; }
   .locked-card:hover { transform: translateY(-3px); }
-  .locked-thumb { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
-    filter: blur(16px) brightness(0.7); transform: scale(1.12); }
-  .locked-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(15,34,51,0.35), rgba(15,34,51,0.72)); z-index: 1; }
+  .locked-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(15,34,51,0.10), rgba(15,34,51,0.55)); z-index: 1; }
   .lock-pill { position: absolute; top: 14px; left: 50%; transform: translateX(-50%); z-index: 3;
     background: rgba(15,34,51,0.55); backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,0.18);
-    color: #fff; font-size: 0.74rem; font-weight: 600; letter-spacing: 0.02em; padding: 6px 14px; border-radius: 100px; white-space: nowrap; }
+    color: #fff; font-size: 0.76rem; font-weight: 600; letter-spacing: 0.02em; padding: 6px 15px; border-radius: 100px; white-space: nowrap; }
   .play-btn { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 2; }
-  .play-circle { width: 84px; height: 84px; background: var(--blue); border-radius: 50%; display: flex; align-items: center; justify-content: center; animation: pulse 2.4s ease-out infinite; transition: transform 0.2s ease, background 0.2s ease; }
+  .play-circle { width: 88px; height: 88px; background: var(--blue); border-radius: 50%; display: flex; align-items: center; justify-content: center; animation: pulse 2.4s ease-out infinite; transition: transform 0.2s ease, background 0.2s ease; }
   .locked-card:hover .play-circle { transform: scale(1.08); background: var(--blue-dark); animation: none; }
-  .play-circle svg { width: 34px; height: 34px; fill: #fff; margin-left: 5px; }
+  .play-circle svg { width: 36px; height: 36px; fill: #fff; margin-left: 5px; }
   @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(51,172,225,0.55); } 70% { box-shadow: 0 0 0 26px rgba(51,172,225,0); } 100% { box-shadow: 0 0 0 0 rgba(51,172,225,0); } }
 
   /* ── PRIMARY CTA ── */
   .cta-wrap { text-align: center; margin: 1.4rem 0 0.4rem; }
-  .cta-btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; width: 100%; max-width: 560px;
-    background: var(--blue); color: #fff; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 1.5rem; letter-spacing: 0.01em;
-    padding: 1.1rem 2rem; border: none; border-radius: 14px; cursor: pointer; text-transform: uppercase;
+  .cta-btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; width: 100%; max-width: 580px;
+    background: var(--blue); color: #fff; font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 1.3rem; letter-spacing: -0.01em;
+    padding: 1.15rem 2rem; border: none; border-radius: 14px; cursor: pointer;
     box-shadow: 0 12px 30px rgba(51,172,225,0.32); transition: background 0.2s, transform 0.15s, box-shadow 0.2s; }
   .cta-btn:hover { background: var(--blue-dark); transform: translateY(-2px); box-shadow: 0 16px 38px rgba(51,172,225,0.4); }
   .cta-btn:active { transform: scale(0.99); }
-  .cta-sub { font-size: 0.82rem; color: var(--muted); margin-top: 0.6rem; }
+  .cta-sub { font-size: 0.84rem; color: var(--muted); margin-top: 0.6rem; }
 
-  /* ── FREE CASE STUDY VIDEO ── */
+  /* ── SECTIONS ── */
   .section { padding: 2.8rem 0; }
   .section-head { text-align: center; margin-bottom: 1.5rem; }
-  .section-head h2 { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: clamp(1.7rem, 5vw, 2.5rem); line-height: 1.05; }
-  .section-head p { color: var(--muted); font-size: 0.98rem; margin-top: 0.5rem; }
-  .cs-video-wrap { max-width: 720px; margin: 0 auto; border-radius: var(--radius); overflow: hidden;
+  .section-head h2 { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: clamp(1.7rem, 4.6vw, 2.5rem); line-height: 1.1; letter-spacing: -0.02em; }
+  .section-head p { color: var(--muted); font-size: 1rem; margin-top: 0.5rem; }
+  .free-tag { display: inline-flex; align-items: center; gap: 6px; background: rgba(51,172,225,0.12); color: var(--blue-dark); font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 0.78rem; letter-spacing: 0.03em; text-transform: uppercase; padding: 5px 13px; border-radius: 100px; margin-bottom: 0.9rem; }
+
+  /* ── CASE STUDY VIDEO (Chris / Tucson RV Solar) ── */
+  .cs-video-wrap { position: relative; max-width: 720px; margin: 0 auto; border-radius: var(--radius); overflow: hidden;
     background: var(--navy); border: 1px solid rgba(15,34,51,0.1); box-shadow: var(--shadow); aspect-ratio: 16/9; }
-  .cs-video-wrap video { width: 100%; height: 100%; display: block; object-fit: cover; background: var(--navy); }
-  .free-tag { display: inline-flex; align-items: center; gap: 6px; background: rgba(51,172,225,0.12); color: var(--blue-dark); font-weight: 600; font-size: 0.78rem; letter-spacing: 0.04em; text-transform: uppercase; padding: 5px 12px; border-radius: 100px; margin-bottom: 0.9rem; }
+  .cs-video-wrap iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
+  .cs-stat-strip { max-width: 720px; margin: 1.1rem auto 0; display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+    gap: 1.4rem 2rem; background: var(--tint); border: 1px solid var(--tint-border); border-radius: 16px; padding: 1.1rem 1.5rem; }
+  .cs-stat { display: flex; flex-direction: column; align-items: center; line-height: 1.05; }
+  .cs-stat b { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 1.55rem; letter-spacing: -0.02em; color: var(--navy); }
+  .cs-stat.hero-stat b { color: var(--blue-dark); }
+  .cs-stat span { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; margin-top: 3px; }
+  .cs-credit { flex-basis: 100%; text-align: center; font-size: 0.86rem; color: var(--muted); font-weight: 600; margin-top: 0.1rem; }
 
   /* ── CASE STUDY STAT CARDS ── */
   .proof { background: var(--tint); border-top: 1px solid var(--tint-border); border-bottom: 1px solid var(--tint-border); }
@@ -150,11 +152,11 @@ src="https://www.facebook.com/tr?id={{META_PIXEL_ID}}&ev=PageView&noscript=1"/><
   .stat-card.navy { background: linear-gradient(155deg, var(--navy-2) 0%, var(--navy) 70%); color: #fff; }
   .stat-card.light { background: #fff; color: var(--ink); border: 1px solid var(--tint-border); }
   .stat-card.span2 { grid-column: 1 / -1; }
-  .sc-eyebrow { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.13em; text-transform: uppercase; margin-bottom: 0.9rem; }
+  .sc-eyebrow { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.9rem; }
   .stat-card.navy .sc-eyebrow { color: #9FC7E4; }
   .stat-card.light .sc-eyebrow { color: var(--muted); }
-  .sc-cash-label { font-size: 0.74rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.75; }
-  .sc-cash { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: clamp(2.6rem, 8vw, 3.6rem); line-height: 0.98; margin: 0.1rem 0 0.15rem; }
+  .sc-cash-label { font-size: 0.74rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; opacity: 0.75; }
+  .sc-cash { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: clamp(2.3rem, 7vw, 3.1rem); line-height: 1; letter-spacing: -0.03em; margin: 0.15rem 0 0.15rem; }
   .stat-card.navy .sc-cash { color: var(--blue); }
   .stat-card.light .sc-cash { color: var(--navy); }
   .sc-note { font-size: 0.82rem; font-weight: 600; margin-bottom: 0.7rem; }
@@ -164,84 +166,81 @@ src="https://www.facebook.com/tr?id={{META_PIXEL_ID}}&ev=PageView&noscript=1"/><
   .stat-card.navy .sc-substats { border-color: rgba(255,255,255,0.14); color: #E4F1FA; }
   .stat-card.light .sc-substats { border-color: var(--tint-border); color: var(--ink); }
   .sc-substats .dot { opacity: 0.5; }
-  .sc-timeframe { font-size: 0.78rem; margin-top: 0.55rem; opacity: 0.7; }
-  .month-one-pill { position: absolute; top: 1.3rem; right: 1.3rem; background: var(--blue); color: #fff; font-size: 0.66rem; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; padding: 5px 11px; border-radius: 100px; }
+  .month-one-pill { position: absolute; top: 1.3rem; right: 1.3rem; background: var(--blue); color: #fff; font-family: 'Poppins', sans-serif; font-size: 0.64rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 5px 11px; border-radius: 100px; }
 
   /* ── REVIEW CARDS ── */
   .review-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
   .review-card { background: var(--tint); border: 1px solid var(--tint-border); border-left: 4px solid var(--blue); border-radius: 14px; padding: 1.5rem 1.5rem 1.4rem; }
   .review-stars { color: var(--star); font-size: 1.05rem; letter-spacing: 0.08em; margin-bottom: 0.7rem; }
-  .review-quote { font-size: 0.97rem; color: var(--ink); line-height: 1.6; margin-bottom: 0.9rem; }
-  .review-name { font-weight: 700; font-size: 0.9rem; color: var(--navy); }
+  .review-quote { font-size: 0.98rem; color: var(--ink); line-height: 1.6; margin-bottom: 0.9rem; }
+  .review-name { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 0.9rem; color: var(--navy); }
   .review-name span { font-weight: 500; color: var(--muted); }
 
   /* ── TRUST STRIP ── */
   .trust { display: flex; align-items: center; justify-content: center; gap: 1.6rem; flex-wrap: wrap; padding: 1.6rem 0 0; }
-  .trust-item { display: flex; align-items: center; gap: 7px; font-size: 0.85rem; color: var(--muted); font-weight: 500; }
+  .trust-item { display: flex; align-items: center; gap: 7px; font-size: 0.86rem; color: var(--muted); font-weight: 500; }
   .trust-item .stars { color: var(--star); }
   .trust-item svg { width: 15px; height: 15px; fill: var(--blue); flex-shrink: 0; }
 
   /* ── FOOTER ── */
-  footer { text-align: center; padding: 2.4rem 1rem 2.6rem; color: #9AA8B2; font-size: 0.78rem; }
+  footer { text-align: center; padding: 2.4rem 1rem 2.6rem; color: #9AA8B2; font-size: 0.8rem; }
   footer a { color: #9AA8B2; text-decoration: none; }
 
   /* ── MODAL ── */
   .overlay { position: fixed; inset: 0; background: rgba(15,34,51,0.78); backdrop-filter: blur(6px); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 1rem; opacity: 0; pointer-events: none; transition: opacity 0.22s ease; }
   .overlay.open { opacity: 1; pointer-events: all; }
-  .modal { background: #fff; border-radius: 20px; padding: 2.25rem 2rem 2rem; max-width: 440px; width: 100%; position: relative;
+  .modal { background: #fff; border-radius: 22px; padding: 2.25rem 2rem 2rem; max-width: 440px; width: 100%; position: relative;
     transform: scale(0.92) translateY(16px); transition: transform 0.3s cubic-bezier(0.34,1.5,0.64,1); box-shadow: 0 40px 90px rgba(15,34,51,0.45); }
   .overlay.open .modal { transform: scale(1) translateY(0); }
   .modal-handle { display: none; }
   .modal-close { position: absolute; top: 1rem; right: 1rem; width: 34px; height: 34px; background: var(--tint); border: none; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; color: var(--muted); cursor: pointer; z-index: 10; }
-  .modal-logo { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 1.05rem; letter-spacing: 0.15em; color: var(--navy); text-align: center; margin-bottom: 0.5rem; }
-  .modal-divider { width: 40px; height: 3px; background: var(--blue); border-radius: 2px; margin: 0 auto 1.1rem; }
-  .modal h2 { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 1.75rem; line-height: 1.1; margin-bottom: 0.4rem; text-align: center; }
-  .modal-sub { font-size: 0.86rem; color: var(--muted); margin-bottom: 1.4rem; line-height: 1.5; text-align: center; }
+  .modal-logo-img { display: block; height: 26px; width: auto; margin: 0 auto 0.7rem; }
+  .modal h2 { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 1.6rem; line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 0.4rem; text-align: center; }
+  .modal-sub { font-size: 0.88rem; color: var(--muted); margin-bottom: 1.4rem; line-height: 1.5; text-align: center; }
   .form-group { margin-bottom: 0.85rem; text-align: left; }
-  .form-group label { display: block; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.35rem; }
-  .form-group input { width: 100%; background: var(--tint); border: 1px solid var(--tint-border); border-radius: 10px; padding: 0.78rem 1rem; color: var(--ink); font-family: 'Inter', sans-serif; font-size: 0.95rem; outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
+  .form-group label { display: block; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.35rem; }
+  .form-group input { width: 100%; background: var(--tint); border: 1px solid var(--tint-border); border-radius: 10px; padding: 0.8rem 1rem; color: var(--ink); font-family: 'Inter', sans-serif; font-size: 0.95rem; outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
   .form-group input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(51,172,225,0.15); }
   .form-group input::placeholder { color: #A9BBC7; }
   .form-group input.error { border-color: var(--err); }
-  .field-error { display: none; color: var(--err); font-size: 0.74rem; margin-top: 0.3rem; font-weight: 500; }
+  .field-error { display: none; color: var(--err); font-size: 0.75rem; margin-top: 0.3rem; font-weight: 500; }
   .field-error.show { display: block; }
   .radio-group { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 4px; }
   .radio-group.error-outline { outline: 2px solid var(--err); outline-offset: 3px; border-radius: 12px; }
   .radio-option { display: flex; align-items: center; gap: 9px; cursor: pointer; padding: 0.7rem 0.85rem; border: 1px solid var(--tint-border); border-radius: 10px; background: var(--tint); transition: border-color 0.2s, background 0.2s; }
   .radio-option:hover { border-color: var(--blue); }
   .radio-option input[type="radio"] { accent-color: var(--blue); width: 16px; height: 16px; flex-shrink: 0; cursor: pointer; }
-  .radio-option span { font-size: 0.88rem; color: var(--ink); font-weight: 500; }
+  .radio-option span { font-size: 0.9rem; color: var(--ink); font-weight: 500; }
   .radio-option:has(input:checked) { border-color: var(--blue); background: rgba(51,172,225,0.1); }
-  .submit-btn { width: 100%; background: var(--blue); color: #fff; border: none; border-radius: 12px; padding: 0.95rem; font-family: 'Barlow Condensed', sans-serif; font-size: 1.2rem; font-weight: 700; letter-spacing: 0.02em; text-transform: uppercase; cursor: pointer; margin-top: 0.5rem; transition: background 0.2s, transform 0.15s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .submit-btn { width: 100%; background: var(--blue); color: #fff; border: none; border-radius: 12px; padding: 1rem; font-family: 'Poppins', sans-serif; font-size: 1.05rem; font-weight: 700; letter-spacing: -0.01em; cursor: pointer; margin-top: 0.5rem; transition: background 0.2s, transform 0.15s; display: flex; align-items: center; justify-content: center; gap: 8px; }
   .submit-btn:hover:not(:disabled) { background: var(--blue-dark); }
   .submit-btn:active { transform: scale(0.98); }
   .submit-btn:disabled { opacity: 0.85; cursor: default; }
-  .privacy-note { font-size: 0.72rem; color: var(--muted); margin-top: 0.9rem; text-align: center; line-height: 1.5; }
+  .privacy-note { font-size: 0.74rem; color: var(--muted); margin-top: 0.9rem; text-align: center; line-height: 1.5; }
   @keyframes spin { to { transform: rotate(360deg); } }
   @keyframes shk { 0%,100% { transform: translateX(0); } 20%,60% { transform: translateX(-5px); } 40%,80% { transform: translateX(5px); } }
 
-  /* ── FOCUS-VISIBLE ── */
   a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-visible { outline: 3px solid rgba(51,172,225,0.55); outline-offset: 2px; border-radius: 6px; }
 
   /* ── MOBILE ── */
   @media (max-width: 640px) {
-    .hero { padding: 1.8rem 0 0.3rem; }
-    h1 { font-size: clamp(1.9rem, 8.5vw, 2.7rem); }
-    .step-line { font-size: 0.92rem; }
-    .cta-btn { font-size: 1.25rem; padding: 1.05rem 1.2rem; }
+    .hero { padding: 1.9rem 0.6rem 0.3rem; }
+    h1 { font-size: clamp(2rem, 8.8vw, 2.9rem); }
+    .step-line { font-size: 0.94rem; }
+    .cta-btn { font-size: 1.15rem; padding: 1.05rem 1.2rem; }
     .section { padding: 2.2rem 0; }
     .stat-grid { grid-template-columns: 1fr; }
     .stat-card.span2 { grid-column: auto; }
     .review-grid { grid-template-columns: 1fr; }
     .trust { gap: 0.9rem; }
-    /* Modal → bottom sheet */
+    .cs-stat b { font-size: 1.4rem; }
     .overlay { padding: 0; align-items: flex-end; }
     .modal { border-radius: 22px 22px 0 0; max-width: 100%; max-height: 92vh; overflow-y: auto; -webkit-overflow-scrolling: touch;
       padding: 0 1.15rem 1.6rem; transform: translateY(100%); transition: transform 0.32s cubic-bezier(0.32,0.72,0,1); }
     .overlay.open .modal { transform: translateY(0); }
     .modal-handle { display: block; width: 40px; height: 4px; background: #E0E8EE; border-radius: 4px; margin: 0.85rem auto 0.6rem; }
-    .modal-logo { margin-top: 0.2rem; }
-    .form-group input { font-size: 16px; } /* prevents iOS zoom */
+    .modal-logo-img { margin-top: 0.2rem; }
+    .form-group input { font-size: 16px; }
   }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
@@ -257,25 +256,23 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <!-- ── HEADER STRIP ── -->
 <header class="strip">
-  <div class="logo">MONOX AI</div>
+  <img class="logo-img" src="/logo.png" alt="Monox AI">
 </header>
 
-<div class="wrap">
-  <!-- ── HERO ── -->
-  <section class="hero">
-    <span class="eyebrow">RV Solar Installers:</span>
-    <h1>How We Fill RV Solar Installers' Calendars With <span class="hl">Ready-to-Buy Customers</span> — Without You Lifting a Finger</h1>
-    <div class="steps">
-      <div class="step-line">🎥 <b>Step 1:</b> Click "See How It Works"</div>
-      <div class="step-line"><b>Step 2:</b> Watch our quick 6-minute video to see the entire process 👇</div>
-    </div>
-  </section>
+<!-- ── HERO ── -->
+<section class="hero">
+  <span class="eyebrow">RV Solar Installers:</span>
+  <h1>How We Fill RV Solar Installers' Calendars With <span class="hl">Ready-to-Buy Customers</span> — Without You Lifting a Finger</h1>
+  <div class="steps">
+    <div class="step-line">🎥 <b>Step 1:</b> Click "See How It Works"</div>
+    <div class="step-line"><b>Step 2:</b> Watch our quick 6-minute video to see the entire process 👇</div>
+  </div>
+</section>
 
+<div class="wrap">
   <!-- ── LOCKED "HOW IT WORKS" VIDEO ── -->
   <section class="locked">
     <div class="locked-card" id="lockedCard" role="button" tabindex="0" aria-label="Unlock the how-it-works video">
-      <img class="locked-thumb" src="{{HOWITWORKS_THUMBNAIL_URL}}" alt="" aria-hidden="true"
-           onerror="this.style.display='none'">
       <div class="locked-overlay"></div>
       <div class="lock-pill">🔒 Video locked — unlock below</div>
       <div class="play-btn">
@@ -291,19 +288,24 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
 </div>
 
-<!-- ── FREE CASE STUDY VIDEO (not gated) ── -->
+<!-- ── FREE CASE STUDY VIDEO — Chris / Tucson RV Solar (not gated) ── -->
 <section class="section">
   <div class="wrap">
     <div class="section-head">
-      <span class="free-tag">▶ Free — no signup</span>
-      <h2>Watch a Real Client Result</h2>
-      <p>See what happens when an RV solar shop runs this exact system.</p>
+      <span class="free-tag">▶ Free case study</span>
+      <h2>How Tucson RV Solar Collected $35,000+ in Month One</h2>
+      <p>Chris breaks down exactly what happened when Tucson RV Solar ran this system.</p>
     </div>
     <div class="cs-video-wrap">
-      <video controls playsinline preload="metadata" poster="{{CASESTUDY_POSTER_URL}}">
-        <source src="{{CASESTUDY_MP4_URL}}" type="video/mp4">
-        Your browser doesn't support embedded video.
-      </video>
+      <iframe src="https://www.loom.com/embed/2dd73e63833f4c02b0ab1650d13fde4c"
+              title="Tucson RV Solar case study" allow="fullscreen" allowfullscreen></iframe>
+    </div>
+    <!-- Chris's stats, placed directly under his video so they're clearly his -->
+    <div class="cs-stat-strip">
+      <div class="cs-stat hero-stat"><b>$35,000+</b><span>Cash · month one</span></div>
+      <div class="cs-stat"><b>124</b><span>Leads</span></div>
+      <div class="cs-stat"><b>30</b><span>Booked calls</span></div>
+      <div class="cs-credit">— Chris · Tucson RV Solar · Tucson, AZ</div>
     </div>
   </div>
 </section>
@@ -322,7 +324,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <div class="sc-cash-label">Cash Collected</div>
         <div class="sc-cash">$120,000+</div>
         <div class="sc-substats"><span>214 leads</span><span class="dot">·</span><span>90 booked calls</span></div>
-        <div class="sc-timeframe">in {{TIMEFRAME_1}}</div>
       </div>
       <!-- 2 — RVs Off Grid -->
       <div class="stat-card light">
@@ -331,7 +332,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <div class="sc-cash">$41,000</div>
         <div class="sc-note">+ $150K in active quotes</div>
         <div class="sc-substats"><span>270 leads</span><span class="dot">·</span><span>90 booked calls</span></div>
-        <div class="sc-timeframe">in {{TIMEFRAME_2}}</div>
       </div>
       <!-- 3 — Tucson RV Solar (MONTH ONE) -->
       <div class="stat-card navy">
@@ -347,7 +347,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <div class="sc-cash-label">Cash Collected</div>
         <div class="sc-cash">$36,000+</div>
         <div class="sc-substats"><span>221 leads</span><span class="dot">·</span><span>30 booked calls/mo</span></div>
-        <div class="sc-timeframe">in {{TIMEFRAME_4}}</div>
       </div>
       <!-- 5 — Momentum Upfitters (full width) -->
       <div class="stat-card navy span2">
@@ -355,7 +354,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <div class="sc-cash-label">Cash Collected</div>
         <div class="sc-cash">$18,500</div>
         <div class="sc-substats"><span>194 leads</span><span class="dot">·</span><span>30 booked calls/mo</span></div>
-        <div class="sc-timeframe">in {{TIMEFRAME_5}}</div>
       </div>
     </div>
   </div>
@@ -376,11 +374,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div class="review-card">
         <div class="review-stars" aria-label="5 out of 5 stars">★★★★★</div>
         <p class="review-quote">"Search my company on Google — I'm the first result. Monox built the site, got it ranked, and now customers tell me every week they found me online."</p>
-        <div class="review-name">Chris <span>— {{CHRIS_COMPANY}}</span></div>
+        <div class="review-name">Chris <span>— Tucson RV Solar</span></div>
       </div>
       <div class="review-card">
         <div class="review-stars" aria-label="5 out of 5 stars">★★★★★</div>
-        <p class="review-quote">"Honestly unbelievable to work with. They rebuilt my website from the ground up and it actually brings in jobs now — the phone rings and people already know what we do before they call."</p>
+        <p class="review-quote">"Honestly unbelievable to work with. They rebuilt my website from the ground up and it actually brings in jobs now."</p>
         <div class="review-name">James <span>— Impact RV Repair</span></div>
       </div>
       <div class="review-card">
@@ -407,8 +405,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="modal-handle"></div>
     <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
-    <div class="modal-logo">MONOX AI</div>
-    <div class="modal-divider"></div>
+    <img class="modal-logo-img" src="/logo.png" alt="Monox AI">
     <h2 id="modalTitle">Enter Your Info to Watch</h2>
     <p class="modal-sub">See exactly how the system books ready-to-buy customers for RV solar installers.</p>
 
@@ -451,8 +448,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   };
 
   // ── Attribution capture (runs on load) ──────────────────────────────────
-  // Pull UTMs + Meta click IDs from the URL and _fbc/_fbp cookies, persist to
-  // sessionStorage so they survive the modal and ride along to /watch.
   function getCookie(name) {
     var m = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
     return m ? m.pop() : '';
@@ -462,13 +457,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     var keys = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','fbclid'];
     var data = {};
     keys.forEach(function(k){ if (qs.get(k)) data[k] = qs.get(k); });
-    // Meta browser cookies (set by the pixel)
     var fbc = getCookie('_fbc'); if (fbc) data.fbc = fbc;
     var fbp = getCookie('_fbp'); if (fbp) data.fbp = fbp;
-    // If fbclid present but _fbc cookie not yet written, synthesize fbc
-    if (data.fbclid && !data.fbc) {
-      data.fbc = 'fb.1.' + Date.now() + '.' + data.fbclid;
-    }
+    if (data.fbclid && !data.fbc) data.fbc = 'fb.1.' + Date.now() + '.' + data.fbclid;
     try { sessionStorage.setItem('monox_attr', JSON.stringify(data)); } catch(e) {}
     return data;
   }
@@ -483,7 +474,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     lastFocused = document.activeElement;
     overlay.classList.add('open');
     overlay.setAttribute('aria-hidden', 'false');
-    // Meta: retargeting signal for people who open the form but may not submit
+    // ViewContent = retargeting signal for form-openers (NOT a conversion)
     if (!pixelViewContentFired && window.fbq) {
       fbq('track', 'ViewContent', { content_name: 'rv-solar-form-open' });
       pixelViewContentFired = true;
@@ -520,9 +511,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     var phoneOk = phoneDigits.length === 10 || (phoneDigits.length === 11 && phoneDigits[0] === '1');
 
     var valid = true;
-    if (!name)   { shake('fName');  showErr('err-name', true);  valid = false; } else { document.getElementById('fName').classList.remove('error'); showErr('err-name', false); }
-    if (!emailOk){ shake('fEmail'); showErr('err-email', true); valid = false; } else { document.getElementById('fEmail').classList.remove('error'); showErr('err-email', false); }
-    if (!phoneOk){ shake('fPhone'); showErr('err-phone', true); valid = false; } else { document.getElementById('fPhone').classList.remove('error'); showErr('err-phone', false); }
+    if (!name)    { shake('fName');  showErr('err-name', true);  valid = false; } else { document.getElementById('fName').classList.remove('error'); showErr('err-name', false); }
+    if (!emailOk) { shake('fEmail'); showErr('err-email', true); valid = false; } else { document.getElementById('fEmail').classList.remove('error'); showErr('err-email', false); }
+    if (!phoneOk) { shake('fPhone'); showErr('err-phone', true); valid = false; } else { document.getElementById('fPhone').classList.remove('error'); showErr('err-phone', false); }
     if (!installs){ document.getElementById('installsGroup').classList.add('error-outline'); showErr('err-installs', true); valid = false; }
     else { document.getElementById('installsGroup').classList.remove('error-outline'); showErr('err-installs', false); }
     if (!valid) return;
@@ -531,7 +522,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     btn.disabled = true;
     btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:#fff;animation:spin 0.8s linear infinite"><path d="M12 4V2A10 10 0 0 0 2 12h2a8 8 0 0 1 8-8z"/></svg> Unlocking…';
 
-    // Normalize phone to +1XXXXXXXXXX
     var normPhone = '+1' + phoneDigits.replace(/^1/, '');
     var payload = Object.assign({
       name: name,
@@ -542,21 +532,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       submitted_at: new Date().toISOString()
     }, ATTR);
 
-    // Fire webhook with retry, but NEVER block the redirect — a lost lead is
-    // worse than a duplicate, so the user always gets through to /watch.
-    var redirected = false;
-    window.__monoxGo = function go() { if (redirected) return; redirected = true; redirectToWatch(payload); };
-    sendWebhook(payload, 0);
-    // Safety net: redirect no later than 5.5s even if all attempts hang.
-    setTimeout(window.__monoxGo, 5500);
+    // The user ALWAYS gets through to /watch. But we only tell /watch to fire the
+    // Lead conversion (lead=1) once the CRM confirms it received the contact.
+    var finished = false;
+    function finish(captured) {
+      if (finished) return; finished = true;
+      redirectToWatch(payload, captured);
+    }
+    sendWebhook(payload, 0, finish);
+    // Safety net: redirect within 6s even if the webhook hangs (captured=false).
+    setTimeout(function(){ finish(false); }, 6000);
   }
 
-  function sendWebhook(payload, attempt) {
-    if (!CONFIG.WEBHOOK_URL || CONFIG.WEBHOOK_URL.indexOf('{{') === 0) {
-      // No webhook configured yet — go straight through.
-      if (window.__monoxGo) window.__monoxGo();
-      return;
-    }
+  function sendWebhook(payload, attempt, finish) {
+    // Not configured yet → we can't confirm a CRM capture, so no conversion.
+    if (!CONFIG.WEBHOOK_URL || CONFIG.WEBHOOK_URL.indexOf('{{') === 0) { finish(false); return; }
     var controller = new AbortController();
     var t = setTimeout(function(){ controller.abort(); }, 5000);
     fetch(CONFIG.WEBHOOK_URL, {
@@ -565,28 +555,40 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       body: JSON.stringify(payload),
       signal: controller.signal
     })
-    .then(function(){ clearTimeout(t); if (window.__monoxGo) window.__monoxGo(); })
+    .then(function(res){
+      clearTimeout(t);
+      if (res && res.ok) {
+        finish(true);                       // CONFIRMED: CRM received the contact → conversion
+      } else if (attempt < 1) {
+        setTimeout(function(){ sendWebhook(payload, attempt + 1, finish); }, 800);
+      } else {
+        lastResort(payload); finish(false); // sent best-effort but unconfirmed → no conversion
+      }
+    })
     .catch(function(){
       clearTimeout(t);
       if (attempt < 1) {
-        setTimeout(function(){ sendWebhook(payload, attempt + 1); }, 800);
+        setTimeout(function(){ sendWebhook(payload, attempt + 1, finish); }, 800);
       } else {
-        // Last resort — fire-and-forget, opaque response, then continue.
-        try {
-          fetch(CONFIG.WEBHOOK_URL, { method: 'POST', mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-        } catch(e) {}
-        if (window.__monoxGo) window.__monoxGo();
+        lastResort(payload); finish(false);
       }
     });
   }
 
-  function redirectToWatch(payload) {
+  function lastResort(payload) {
+    try {
+      fetch(CONFIG.WEBHOOK_URL, { method: 'POST', mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+    } catch(e) {}
+  }
+
+  function redirectToWatch(payload, captured) {
     var params = new URLSearchParams();
     params.set('name', payload.name);
     params.set('email', payload.email);
     params.set('phone', payload.phone);
     params.set('installs_per_month', payload.installs_per_month);
+    params.set('lead', captured ? '1' : '0'); // /watch fires the Lead conversion only when '1'
     ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','fbclid','fbc','fbp'].forEach(function(k){
       if (payload[k]) params.set(k, payload[k]);
     });
@@ -608,7 +610,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       if (!overlay.classList.contains('open')) return;
       if (e.key === 'Escape') closeModal();
       if (e.key === 'Enter' && document.activeElement && document.activeElement.tagName !== 'BUTTON') submitForm();
-      // Focus trap
       if (e.key === 'Tab') {
         var f = overlay.querySelectorAll('input, button, [tabindex]:not([tabindex="-1"])');
         if (!f.length) return;

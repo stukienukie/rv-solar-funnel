@@ -1,133 +1,123 @@
 # Monox AI — RV Solar Installer Funnel (v2)
 
-A 2-page lead-gen funnel, static HTML for Vercel. No build step, no frameworks — just
-inline CSS/JS plus Google Fonts.
+A 2-page lead-gen funnel, static HTML for Vercel. No build step, no frameworks.
 
 ```
 /                 index.html        Opt-in page (form gate → /watch)
 /watch            watch/index.html  How-it-works video + booking
-/favicon.svg      Monox "M" mark
+/logo.png         monox.ai wordmark (transparent)
+/favicon.png      Monox "O" mark (transparent)
 ```
 
 **Flow:** Paid Meta traffic lands on `/` → clicks "See How It Works" → fills the modal
-form → is redirected to `/watch` with their info + attribution in the query string →
+form → redirected to `/watch` (with their info + attribution in the query string) →
 watches the how-it-works video and books a call.
 
 ---
 
-## 1. Deploy
+## What's already wired
 
-1. `git push` this repo to GitHub (already wired to `github.com/stukienukie/rv-solar-funnel`).
-2. In Vercel, this is the existing **rv-solar-funnel** project — pushing to the
-   production branch redeploys. `index.html` serves at `/`, `watch/index.html` at `/watch`.
-3. Custom domain recommended for ad trust (e.g. `go.monox.ai`) → add it in Vercel → Domains.
+- **Meta Pixel** `1514677843570094` — hardcoded on both pages.
+- **How-it-works video** (gated): Loom `610a1353…` on `/watch`.
+- **Case-study video** (free): Chris / Tucson RV Solar, Loom `2dd73e63…` on `/`.
+- **Logo + favicon**: isolated to transparent PNGs.
+- Fonts: **Poppins** (headlines) + **Inter** (body).
 
-> This v2 build currently lives on the **`v2-rebuild`** branch. Merge it into the
-> production branch (or point Vercel's production branch at it) when you're ready to
-> replace the old single-page version.
+## Still to fill before going live (2 placeholders)
 
----
-
-## 2. Fill in the placeholders
-
-Every `{{...}}` token must be replaced before launch. Full list in **§5**. The two files
-each open with a placeholder legend in an HTML comment at the top.
-
-Videos:
-- **How-it-works (gated)** — a Loom video. Page 1 shows a blurred/locked *teaser* image
-  (`{{HOWITWORKS_THUMBNAIL_URL}}`); the real video plays on `/watch` via the Loom embed
-  (`{{HOWITWORKS_LOOM_EMBED_URL}}`). Get the embed URL from Loom → Share → Embed.
-- **Case study (free)** — one freely-playable video on page 1, HTML5 `<video>`
-  (`{{CASESTUDY_MP4_URL}}` + `{{CASESTUDY_POSTER_URL}}`).
+| Placeholder | File | Where |
+|---|---|---|
+| `{{GHL_INBOUND_WEBHOOK_URL}}` | index.html | `CONFIG.WEBHOOK_URL` |
+| `{{GHL_BOOKING_WIDGET_URL}}` | watch/index.html | booking `<iframe src>` |
 
 ---
 
-## 3. GHL Inbound Webhook setup (lead capture)
+## Conversion tracking (IMPORTANT)
 
-1. GHL → **Automation → Workflows → New Workflow → trigger "Inbound Webhook."**
-2. Copy the webhook URL into `CONFIG.WEBHOOK_URL` at the top of `index.html`'s script.
-3. Deploy, submit one real test from `/`, then in the trigger **map the sample payload**.
-   The page POSTs this JSON:
-   ```json
-   {
-     "name": "...", "email": "...", "phone": "+15551234567",
-     "installs_per_month": "3-5", "page": "rv-solar-funnel",
-     "submitted_at": "2026-01-01T00:00:00.000Z",
-     "utm_source": "...", "utm_medium": "...", "utm_campaign": "...",
-     "utm_content": "...", "utm_term": "...", "fbclid": "...", "fbc": "...", "fbp": "..."
-   }
-   ```
-4. Workflow actions, in order:
-   - **Create/Update Contact** (name, email, phone).
-   - **Update Contact Field** → custom field `Installs Per Month` = `installs_per_month`.
-   - Save `utm_source`, `utm_campaign`, `utm_content`, `fbclid` to contact custom fields
-     (create them first if they don't exist).
-   - **Add Tag** `rv-solar-funnel-lead`.
-   - **Internal Notification** to Luke + Isaac, including the installs value.
+The **Lead** event = your conversion. It fires **only when a prospect's contact info is
+captured and confirmed received by the CRM** — never on a plain page view.
 
-> The form **always** redirects to `/watch`, even if the webhook errors or times out
-> (5s timeout → one retry → last-resort `no-cors` POST → redirect regardless). A lost
-> lead is worse than a duplicate.
+How it works:
+1. On submit, page 1 POSTs the contact to `{{GHL_INBOUND_WEBHOOK_URL}}`.
+2. If the CRM responds OK, page 1 redirects to `/watch?...&lead=1`.
+   If the webhook fails/isn't configured, it still redirects (so the user sees the
+   video) but with `lead=0`.
+3. `/watch` fires **PageView** always, but fires **Lead** (once, with advanced matching
+   em/ph/fn + an `eventID` for CAPI dedup) **only when `lead=1`**.
+
+Consequences:
+- **Until `{{GHL_INBOUND_WEBHOOK_URL}}` is set, `lead` is always 0 → no Lead ever fires.**
+  Expect zero conversions in Meta Test Events until the webhook is live.
+- `PageView` (both pages) and `ViewContent` (form-open, page 1) still fire — these are
+  traffic/retargeting signals, **not** conversions. Optimize your ad set on **Lead**.
 
 ---
 
-## 4. Booking automations (separate workflow)
+## Map the form into GoHighLevel (captures name, email, phone)
+
+The form POSTs this JSON to your Inbound Webhook:
+
+```json
+{
+  "name": "Jane Doe",
+  "email": "jane@example.com",
+  "phone": "+15551234567",
+  "installs_per_month": "3-5",
+  "page": "rv-solar-funnel",
+  "submitted_at": "2026-01-01T00:00:00.000Z",
+  "utm_source": "...", "utm_medium": "...", "utm_campaign": "...",
+  "utm_content": "...", "utm_term": "...", "fbclid": "...", "fbc": "...", "fbp": "..."
+}
+```
+
+Setup:
+1. GHL → **Automation → Workflows → New Workflow → Add New Trigger → "Inbound Webhook."**
+2. Copy the webhook URL → paste into `CONFIG.WEBHOOK_URL` in `index.html` → redeploy.
+3. Back in the trigger, click **"Fetch Sample Request,"** then submit one real test on `/`.
+   GHL captures the payload so you can map fields.
+4. Add action **"Create/Update Contact"** and map:
+   - **Full Name** ← `{{inboundWebhookRequest.name}}`  (or First Name — GHL splits it)
+   - **Email** ← `{{inboundWebhookRequest.email}}`
+   - **Phone** ← `{{inboundWebhookRequest.phone}}`  (already E.164, `+1XXXXXXXXXX`)
+5. Add **"Update Contact Field"** → custom field **Installs Per Month** ←
+   `{{inboundWebhookRequest.installs_per_month}}` (create the field first).
+6. (Optional) Save `utm_source` / `utm_campaign` / `utm_content` / `fbclid` to contact
+   custom fields for attribution.
+7. Add **Tag** `rv-solar-funnel-lead` and an **Internal Notification** to Luke + Isaac.
+
+> GHL's inbound webhook returns `200` and permits CORS, so the page can read the success
+> response and correctly fire the Lead conversion. Deduplicate contacts by email+phone.
+
+---
+
+## Booking automations (separate workflow)
 
 Trigger **"Customer Booked Appointment"** on this funnel's calendar:
-- Immediate confirmation **email + SMS**.
-- Reminder **24h** before, reminder **1h** before.
-- If/Else on appointment status after the slot:
-  - **No-show** → SMS: *"Hey {{contact.first_name}}, we missed you — want to grab a new
-    time?"* + rebooking link.
-  - **Showed** → move to the post-call pipeline stage.
+- Immediate confirmation **email + SMS**; reminders **24h** and **1h** before.
+- After the slot: **no-show** → SMS *"Hey {{contact.first_name}}, we missed you — want to
+  grab a new time?"* + rebooking link; **showed** → move to post-call pipeline stage.
 
 ---
 
-## 5. Placeholder checklist
+## Deploy
 
-**`index.html`**
-- [ ] `{{META_PIXEL_ID}}` — Meta Pixel ID (appears 3×: init, PageView noscript img)
-- [ ] `{{GHL_INBOUND_WEBHOOK_URL}}` — CONFIG.WEBHOOK_URL
-- [ ] `{{HOWITWORKS_THUMBNAIL_URL}}` — blurred locked teaser image
-- [ ] `{{CASESTUDY_POSTER_URL}}` — free case-study video poster
-- [ ] `{{CASESTUDY_MP4_URL}}` — free case-study video source
-- [ ] `{{TIMEFRAME_1}}` · `{{TIMEFRAME_2}}` · `{{TIMEFRAME_4}}` · `{{TIMEFRAME_5}}`
-- [ ] `{{CHRIS_COMPANY}}` — Chris's company (review card)
+1. `git push` (repo: `github.com/stukienukie/rv-solar-funnel`).
+2. Vercel project **rv-solar-funnel** — production branch redeploys on push.
+   This v2 build is on branch **`v2-rebuild`** (preview) until you merge to `main`.
+3. Custom domain recommended (e.g. `go.monox.ai`) → Vercel → Domains.
 
-**`watch/index.html`**
-- [ ] `{{META_PIXEL_ID}}` — same pixel ID (appears 2×)
-- [ ] `{{HOWITWORKS_LOOM_EMBED_URL}}` — Loom embed URL for the how-it-works video
-- [ ] `{{GHL_BOOKING_WIDGET_URL}}` — GHL booking widget URL
-- [ ] `{{TIMEFRAME_1}}` · `{{TIMEFRAME_2}}` · `{{TIMEFRAME_4}}` · `{{TIMEFRAME_5}}`
+## Test checklist
 
-> Tucson RV Solar has no timeframe token — it shows the **MONTH ONE** pill instead.
-> The `/watch` aggregate stats band ($250K+ / 1,000+ / 270+) is derived from the five
-> case studies; update it if the numbers change.
-
----
-
-## 6. Test checklist
-
-- [ ] Submit a test on `/` → contact appears in GHL with tag `rv-solar-funnel-lead`,
-      the `Installs Per Month` field, and UTM/fbclid fields populated.
-- [ ] Redirect lands on `/watch` with `name`, `email`, `phone`, `installs_per_month`
-      and attribution params in the URL.
-- [ ] Meta **Events Manager → Test Events**:
-  - `PageView` on both pages.
-  - `ViewContent` when the form modal opens on `/`.
-  - `Lead` fires **once** on `/watch`, showing advanced-matching quality (em/ph/fn).
-- [ ] Refresh `/watch` → `Lead` does **not** fire again (sessionStorage guard).
-- [ ] Temporarily break `CONFIG.WEBHOOK_URL` → confirm the redirect to `/watch` still
-      happens.
-- [ ] Book a test appointment → confirmation + reminders queue in GHL.
-
----
+- [ ] Submit on `/` → contact in GHL with tag, `Installs Per Month`, UTM/fbclid fields.
+- [ ] Redirect lands on `/watch` with `name`/`email`/`phone`/`installs_per_month`/`lead=1`.
+- [ ] Meta **Test Events**: `PageView` (both), `ViewContent` (form open), `Lead` **once**
+      on `/watch` with advanced matching — and **only** after a successful CRM capture.
+- [ ] Break `CONFIG.WEBHOOK_URL` → redirect still happens, `lead=0`, **no** Lead fires.
+- [ ] Refresh `/watch` → Lead does not fire again.
+- [ ] Book a test appointment → confirmation + reminders queue.
 
 ## Notes
 
-- **Meta Pixel is hardcoded on-page** for reliability. GTM (`GTM-NKKF36BW`) is also
-  loaded, but do **not** re-install the pixel inside GTM or events will double-fire.
-- Pixel `Lead` carries an `eventID` (stored in sessionStorage) so server-side CAPI
-  dedup can be added later without touching the page.
-- Radio buttons (not a `<select>`) are used for "installs per month" — friendlier taps
-  for a trades audience; same required-single-choice behavior.
+- Meta Pixel is hardcoded on-page for reliability; GTM (`GTM-NKKF36BW`) is also loaded —
+  do **not** re-install the pixel in GTM (double-fires).
+- Radio buttons (not `<select>`) for "installs per month" — friendlier taps for trades.
