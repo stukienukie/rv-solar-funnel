@@ -1,4 +1,4 @@
-# Monox AI — RV Solar Installer Funnel
+# Monox AI — RV Solar & Repair Funnel
 
 A **single-page** lead-gen funnel, static HTML for Vercel. No build step, no frameworks.
 
@@ -58,7 +58,7 @@ The form POSTs this JSON to the Inbound Webhook:
 ```json
 {
   "name": "Jane Doe", "email": "jane@example.com", "phone": "+15551234567",
-  "installs_per_month": "3-5", "page": "rv-solar-funnel",
+  "looking_to_grow": "Yes", "page": "rv-solar-funnel",
   "submitted_at": "2026-01-01T00:00:00.000Z",
   "utm_source": "...", "utm_campaign": "...", "fbclid": "...", "fbc": "...", "fbp": "..."
 }
@@ -68,7 +68,7 @@ In the workflow (trigger = Inbound Webhook):
 1. **Fetch Sample Request**, then submit one real test on `/` so GHL sees the fields.
 2. **Create/Update Contact** → Name ← `{{inboundWebhookRequest.name}}`,
    Email ← `{{inboundWebhookRequest.email}}`, Phone ← `{{inboundWebhookRequest.phone}}`.
-3. **Update Contact Field** → `Installs Per Month` ← `{{inboundWebhookRequest.installs_per_month}}`.
+3. **Update Contact Field** → `Looking To Grow` ← `{{inboundWebhookRequest.looking_to_grow}}` (create the field, or use it to branch / add a tag).
 4. Add Tag `rv-solar-funnel-lead` + Internal Notification to Luke + Isaac.
 
 > GHL's inbound webhook returns `200` and permits CORS, so the page reads success and
@@ -90,7 +90,7 @@ reminders 24h + 1h before → no-show SMS + rebooking link / showed → post-cal
 ## Test checklist
 
 - [ ] Submit on `/` → video unlocks inline, booking reveals (once URL set), contact lands
-      in GHL with tag + `Installs Per Month` + UTM/fbclid fields.
+      in GHL with tag + `Looking To Grow` + UTM/fbclid fields.
 - [ ] Meta **Test Events**: `PageView`, `ViewContent` (form open), and a single `Lead`
       with advanced matching — **only** after a successful CRM capture.
 - [ ] Break `CONFIG.WEBHOOK_URL` → video still unlocks, **no** Lead fires.
