@@ -25,8 +25,8 @@
 <!-- ===== Meta Pixel ============================================================
      PageView on load; ViewContent when the form opens (retargeting, NOT a
      conversion). Lead (the CONVERSION) fires ONCE, with advanced matching
-     (em/ph/fn) + an eventID, and ONLY after the GHL webhook confirms the
-     contact was received by the CRM. See fireLead() below. ================== -->
+     (em/ph/fn) + an eventID, at the moment a valid contact is submitted
+     (name + email + phone captured and sent to the CRM). See fireLead(). ===== -->
 <script>
 !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
 n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
@@ -529,7 +529,7 @@ src="https://www.facebook.com/tr?id=1514677843570094&ev=PageView&noscript=1"/></
     document.querySelector('.video-shell').scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 
-  // ── Lead conversion — fires once, ONLY on confirmed CRM capture ───────────
+  // ── Lead conversion — fires once, at the moment a valid contact is submitted ──
   function fireLead(payload) {
     if (leadFired || !window.fbq) return;
     try { if (sessionStorage.getItem('monox_lead_fired')) { leadFired = true; return; } } catch(e) {}
@@ -583,9 +583,13 @@ src="https://www.facebook.com/tr?id=1514677843570094&ev=PageView&noscript=1"/></
       submitted_at: new Date().toISOString()
     }, ATTR);
 
-    // Give access immediately, then confirm the CRM capture in the background.
-    // The Lead conversion fires only once the webhook confirms the contact.
+    // Valid contact info submitted → unlock access, fire the Lead conversion
+    // (THIS is the moment a real contact is captured + sent), then deliver to CRM.
+    // We fire Lead here (not on the webhook response) because GHL's webhook is
+    // cross-origin without CORS headers, so the browser can't read its response —
+    // but the POST still reaches GHL. Submit = conversion.
     unlockVideo();
+    fireLead(payload);
     sendWebhook(payload, 0);
   }
 
@@ -601,12 +605,10 @@ src="https://www.facebook.com/tr?id=1514677843570094&ev=PageView&noscript=1"/></
     })
     .then(function(res){
       clearTimeout(t);
-      if (res && res.ok) {
-        fireLead(payload);                 // CONFIRMED: CRM received the contact → conversion
-      } else if (attempt < 1) {
-        setTimeout(function(){ sendWebhook(payload, attempt + 1); }, 800);
-      } else {
-        lastResort(payload);               // sent best-effort, unconfirmed → no conversion
+      // Delivery only — the Lead conversion already fired at submit time.
+      if (!(res && res.ok)) {
+        if (attempt < 1) setTimeout(function(){ sendWebhook(payload, attempt + 1); }, 800);
+        else lastResort(payload);
       }
     })
     .catch(function(){
