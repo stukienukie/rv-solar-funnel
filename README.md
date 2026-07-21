@@ -56,7 +56,7 @@ The form POSTs this JSON to the Inbound Webhook:
 ```json
 {
   "name": "Jane Doe", "email": "jane@example.com", "phone": "+15551234567",
-  "looking_to_grow": "Yes", "page": "rv-solar-funnel",
+  "looking_to_grow": "Yes", "source": "RV Solar Funnel", "page": "rv-solar-funnel",
   "submitted_at": "2026-01-01T00:00:00.000Z",
   "utm_source": "...", "utm_campaign": "...", "fbclid": "...", "fbc": "...", "fbp": "..."
 }

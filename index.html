@@ -554,7 +554,7 @@ src="https://www.facebook.com/tr?id=1514677843570094&ev=PageView&noscript=1"/></
       : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c){
           var r = Math.random()*16|0, v = c === 'x' ? r : (r&0x3|0x8); return v.toString(16); });
     fbq('track', 'Lead', {}, { eventID: eventID });
-    console.info('[Monox] ✅ Lead event fired →', { email: payload.email, phone: payload.phone, eventID: eventID });
+    console.info('[Monox] ✅ Lead event fired', { eventID: eventID });
     try { sessionStorage.setItem('monox_lead_fired', '1'); sessionStorage.setItem('monox_lead_eventID', eventID); } catch(e) {}
   }
 
@@ -587,6 +587,7 @@ src="https://www.facebook.com/tr?id=1514677843570094&ev=PageView&noscript=1"/></
       email: email.toLowerCase(),
       phone: normPhone,
       looking_to_grow: grow,
+      source: 'RV Solar Funnel',            // → map to the Opportunity "Source" in GHL
       page: 'rv-solar-funnel',
       submitted_at: new Date().toISOString()
     }, ATTR);
