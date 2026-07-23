@@ -573,7 +573,7 @@ src="https://www.facebook.com/tr?id=1514677843570094&ev=PageView&noscript=1"/></
     var phoneOk = phoneDigits.length === 10 || (phoneDigits.length === 11 && phoneDigits[0] === '1');
 
     var valid = true;
-    if (!name)    { shake('fName');  showErr('err-name', true);  valid = false; } else { document.getElementById('fName').classList.remove('error'); showErr('err-name', false); }
+    if (!name || name.length < 2) { shake('fName');  showErr('err-name', true);  valid = false; } else { document.getElementById('fName').classList.remove('error'); showErr('err-name', false); }
     if (!emailOk) { shake('fEmail'); showErr('err-email', true); valid = false; } else { document.getElementById('fEmail').classList.remove('error'); showErr('err-email', false); }
     if (!phoneOk) { shake('fPhone'); showErr('err-phone', true); valid = false; } else { document.getElementById('fPhone').classList.remove('error'); showErr('err-phone', false); }
     if (!grow){ document.getElementById('growGroup').classList.add('error-outline'); showErr('err-grow', true); valid = false; }
@@ -602,42 +602,20 @@ src="https://www.facebook.com/tr?id=1514677843570094&ev=PageView&noscript=1"/></
     // but the POST still reaches GHL. Submit = conversion.
     unlockVideo();
     fireLead(payload);
-    sendWebhook(payload, 0);
+    sendWebhook(payload);
   }
 
-  function sendWebhook(payload, attempt) {
-    if (!CONFIG.WEBHOOK_URL || CONFIG.WEBHOOK_URL.indexOf('{{') === 0) return; // no CRM → no conversion
-    var controller = new AbortController();
-    var t = setTimeout(function(){ controller.abort(); }, 5000);
-    fetch(CONFIG.WEBHOOK_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-      signal: controller.signal
-    })
-    .then(function(res){
-      clearTimeout(t);
-      // Delivery only — the Lead conversion already fired at submit time.
-      if (!(res && res.ok)) {
-        if (attempt < 1) setTimeout(function(){ sendWebhook(payload, attempt + 1); }, 800);
-        else lastResort(payload);
-      }
-    })
-    .catch(function(){
-      clearTimeout(t);
-      if (attempt < 1) {
-        setTimeout(function(){ sendWebhook(payload, attempt + 1); }, 800);
-      } else {
-        lastResort(payload);
-      }
+  function sendWebhook(payload) {
+    if (!CONFIG.WEBHOOK_URL || CONFIG.WEBHOOK_URL.indexOf('{{') === 0) return;
+    // GHL supports CORS, so a normal JSON POST works from the browser and GHL
+    // parses EVERY field — including the "+" in the phone. (The old no-cors
+    // fallback was delivering the body in a form GHL mis-parsed, dropping the
+    // phone.) keepalive lets the request finish even while the page navigates.
+    var opts = { method: 'POST', headers: { 'Content-Type': 'application/json' },
+                 body: JSON.stringify(payload), keepalive: true };
+    fetch(CONFIG.WEBHOOK_URL, opts).catch(function(){
+      fetch(CONFIG.WEBHOOK_URL, opts).catch(function(){}); // one retry, then stop
     });
-  }
-
-  function lastResort(payload) {
-    try {
-      fetch(CONFIG.WEBHOOK_URL, { method: 'POST', mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-    } catch(e) {}
   }
 
   // ── Wiring ────────────────────────────────────────────────────────────────
