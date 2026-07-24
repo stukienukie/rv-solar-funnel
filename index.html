@@ -585,8 +585,14 @@ src="https://www.facebook.com/tr?id=1514677843570094&ev=PageView&noscript=1"/></
     btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:#fff;animation:spin 0.8s linear infinite"><path d="M12 4V2A10 10 0 0 0 2 12h2a8 8 0 0 1 8-8z"/></svg> Unlocking…';
 
     var normPhone = '+1' + phoneDigits.replace(/^1/, '');
+    // Split the single Name field into first/last so GHL can map them separately.
+    var nameParts = name.split(/\s+/);
+    var firstName = nameParts.shift() || name;
+    var lastName = nameParts.join(' ');
     var payload = Object.assign({
       name: name,
+      first_name: firstName,
+      last_name: lastName,
       email: email.toLowerCase(),
       phone: normPhone,
       looking_to_grow: grow,

@@ -55,7 +55,8 @@ The form POSTs this JSON to the Inbound Webhook:
 
 ```json
 {
-  "name": "Jane Doe", "email": "jane@example.com", "phone": "+15551234567",
+  "name": "Jane Doe", "first_name": "Jane", "last_name": "Doe",
+  "email": "jane@example.com", "phone": "+15551234567",
   "looking_to_grow": "Yes", "source": "RV Solar Funnel", "page": "rv-solar-funnel",
   "submitted_at": "2026-01-01T00:00:00.000Z",
   "utm_source": "...", "utm_campaign": "...", "fbclid": "...", "fbc": "...", "fbp": "..."
@@ -64,8 +65,9 @@ The form POSTs this JSON to the Inbound Webhook:
 
 In the workflow (trigger = Inbound Webhook):
 1. **Fetch Sample Request**, then submit one real test on `/` so GHL sees the fields.
-2. **Create/Update Contact** → Name ← `{{inboundWebhookRequest.name}}`,
-   Email ← `{{inboundWebhookRequest.email}}`, Phone ← `{{inboundWebhookRequest.phone}}`.
+2. **Create/Update Contact** → First Name ← `{{inboundWebhookRequest.first_name}}`,
+   Last Name ← `{{inboundWebhookRequest.last_name}}`, Email ← `{{inboundWebhookRequest.email}}`,
+   Phone ← `{{inboundWebhookRequest.phone}}`. (Full name is also sent as `name`.)
 3. **Update Contact Field** → `Looking To Grow` ← `{{inboundWebhookRequest.looking_to_grow}}` (create the field, or use it to branch / add a tag).
 4. Add Tag `rv-solar-funnel-lead` + Internal Notification to Luke + Isaac.
 
